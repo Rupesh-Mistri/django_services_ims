@@ -21,4 +21,5 @@ from supplier_master.views import Supplier
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('supplier',Supplier.as_view()),
+    path('supplier/<pk>',Supplier.as_view()),
 ]

@@ -20,5 +20,6 @@ from purchase_master.views import Purchase
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('purchase',Purchase.as_view())
+    path('purchase',Purchase.as_view()),
+    path('purchase/<pk>',Purchase.as_view())
 ]

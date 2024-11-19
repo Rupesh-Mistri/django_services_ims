@@ -49,7 +49,7 @@ class PurchaseDetailsSerializer(serializers.ModelSerializer):
 
 {
     "purchase_master":{
-            "invoice_no":"1234",
+            "invoice_no":"1333",
             "invoice_date":"2024-11-23",
             "supplier_id":1,
             "status":1,
@@ -68,6 +68,15 @@ class PurchaseDetailsSerializer(serializers.ModelSerializer):
         "item2":{ "status":1,
         "stampdatetime":"2024-11-23",
         "item":2,
+        "rate":30,
+        "quantity":10,
+        "total":300,
+        "fkey":1,
+        "purchase_master":1
+       },
+       "item3":{ "status":1,
+        "stampdatetime":"2024-11-23",
+        "item":3,
         "rate":30,
         "quantity":10,
         "total":300,

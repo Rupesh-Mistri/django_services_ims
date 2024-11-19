@@ -45,3 +45,11 @@ services:
       - "8005:8000"
     volumes:
       - ./report_master_service:/app
+
+  ims_frontend:
+    build:
+      context: ./ims_frontend
+    container_name: ims_frontend
+    ports:
+      - "3000:3000":
+    volumes: -./ims_frontend:app

@@ -9,12 +9,20 @@ def index(request):
 
 
 class Item(APIView):
-    def get(self, request):
+    def get(self, request,pk=None):
         """
         Handles GET requests to retrieve all items.
         """
-        items = Item_master.objects.all()
-        serializer = ItemSerializer(items, many=True)
+        if pk is None:
+            items = Item_master.objects.all()
+            serializer = ItemSerializer(items, many=True)
+        else:
+            try:
+                supplier = Item_master.objects.get(pk=pk)  # Get supplier by primary key
+                serializer = ItemSerializer(supplier)  # Serialize single object
+            except Item_master.DoesNotExist:
+                return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):

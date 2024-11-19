@@ -20,5 +20,5 @@ class Supplier_master(models.Model):
 #         "address": "Delhi",
 #         "mobile": "7654994344",
 #         "timestamp": "2024-11-19",
-#         "status": 1,
+#         "status": 1
 # }
