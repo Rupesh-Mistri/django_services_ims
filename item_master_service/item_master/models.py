@@ -10,9 +10,9 @@ class Item_master(models.Model):
     class  Meta:
         db_table = 'item_master'
 
-#         {
-#     "status": "1",
-#     "stampdatetime": "2024-11-19",
-#     "item_name": 'Laptop',
-#     "rate": 20
-# }
+        {
+    "status": "1",
+    "stampdatetime": "2024-11-19",
+    "item_name": "Laptop",
+    "rate": 20
+}
