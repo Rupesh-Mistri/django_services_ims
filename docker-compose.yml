@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  item_master_service:
+    build:
+      context: ./item_master_service
+    container_name: item_master_service
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./item_master_service:/app
+
+  supplier_master_service:
+    build:
+      context: ./supplier_master_service
+    container_name: supplier_master_service
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./supplier_master_service:/app
+
+  purchase_master_service:
+    build:
+      context: ./purchase_master_service
+    container_name: purchase_master_service
+    ports:
+      - "8003:8000"
+    volumes:
+      - ./purchase_master_service:/app
+
+  sell_master_service:
+    build:
+      context: ./sell_master_service
+    container_name: sell_master_service
+    ports:
+      - "8004:8000"
+    volumes:
+      - ./sell_master_service:/app
+
+  report_master_service:
+    build:
+      context: ./report_master_service
+    container_name: report_master_service
+    ports:
+      - "8005:8000"
+    volumes:
+      - ./report_master_service:/app
