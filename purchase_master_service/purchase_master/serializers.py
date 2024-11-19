@@ -5,7 +5,13 @@ class PurchaseMasterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Purchase_master
         fields = ['id', 'invoice_no', 'invoice_date', 'supplier_id', 'status', 'purchase_date']
-
+# {
+#     "invoice_no":"1234",
+#     "invoice_date":"2024-11-23",
+#     "supplier_id":1,
+#     "status":1,
+#     "purchase_date":"2024-11-23"
+# }
 
 class TempPurchaseDetailsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,3 +36,43 @@ class PurchaseDetailsSerializer(serializers.ModelSerializer):
             'fkey',  # ForeignKey field pointing to Purchase_master
             'purchase_master',
         ]
+# {
+#     "status":1,
+#     "stampdatetime":"2024-11-23",
+#     "item":1,
+#     "rate":20,
+#     "quantity":10,
+#     "total":200,
+#     "fkey":1,
+#     "purchase_master":1
+# }
+
+{
+    "purchase_master":{
+            "invoice_no":"1234",
+            "invoice_date":"2024-11-23",
+            "supplier_id":1,
+            "status":1,
+            "purchase_date":"2024-11-23"
+        },
+    "purchase_details":{
+       "item1":{ "status":1,
+        "stampdatetime":"2024-11-23",
+        "item":1,
+        "rate":20,
+        "quantity":10,
+        "total":200,
+        "fkey":1,
+        "purchase_master":1
+       },
+        "item2":{ "status":1,
+        "stampdatetime":"2024-11-23",
+        "item":2,
+        "rate":30,
+        "quantity":10,
+        "total":300,
+        "fkey":1,
+        "purchase_master":1
+       }
+    }
+}
