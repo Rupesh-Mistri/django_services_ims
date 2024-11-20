@@ -11,16 +11,18 @@ class Supplier(APIView):
         """
         Handles GET requests to retrieve all suppliers or a specific supplier by ID.
         """
+        if not request.user.is_authenticated:
+            return Response({"error": "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
+
         if pk is None:
-            suppliers = Supplier_master.objects.all()  # Get all suppliers
+            suppliers = Supplier_master.objects.all()
             serializer = SupplierSerializer(suppliers, many=True)
         else:
             try:
-                supplier = Supplier_master.objects.get(pk=pk)  # Get supplier by primary key
-                serializer = SupplierSerializer(supplier)  # Serialize single object
+                supplier = Supplier_master.objects.get(pk=pk)
+                serializer = SupplierSerializer(supplier)
             except Supplier_master.DoesNotExist:
                 return Response({"error": "Supplier not found"}, status=status.HTTP_404_NOT_FOUND)
-
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):

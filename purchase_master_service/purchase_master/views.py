@@ -8,25 +8,33 @@ import requests
 
 # Create your views here.
 
+IS_LOCAL=True
 
 class Purchase(APIView):
-    base_url = "http://192.168.1.5"
+    base_url ="http://127.0.0.1" if IS_LOCAL else "http://192.168.1.5" 
     item_url = f'{base_url}:8001'
     supplier_url = f'{base_url}:8002'
 
-    def get(self, request,pk=None):
-        Temp_purchase_details.objects.all().delete()
-        if pk==None:
+    def get_supplier_data(self, supplier_id):
+        token = get_supplier_service_token()
+        # print("Token",token)
+        headers = {"Authorization": f"Bearer {token}"}
+        response = requests.get(f"{self.supplier_url}/supplier/{supplier_id}", headers=headers)
+
+        if response.status_code == 200:
+            # print(response.json())
+            return response.json()
+        else:
+            return {"error": "Unable to fetch supplier data"}
+    
+    def get(self, request, pk=None):
+        # Fetch supplier data using the above method
+        if pk is None:
             purchases = Purchase_master.objects.all()
             purchase_data = []
-
-            j=0
             for purchase in purchases:
-                
-                # print(f"{self.supplier_url}/supplier/{purchase.supplier_id}/")
-                supplier_response = requests.get(f"{self.supplier_url}/supplier/{purchase.supplier_id}")
-                supplier_data = supplier_response.json() if supplier_response.status_code == 200 else {}
-                print("supplier_data",supplier_data)
+                supplier_data = self.get_supplier_data(purchase.supplier_id)
+                print(supplier_data)
                 purchase_details = Purchase_details.objects.filter(fkey=purchase.id)
                 aggregated_data = {
                     "id": purchase.id,
@@ -36,28 +44,20 @@ class Purchase(APIView):
                     "supplier": supplier_data.get("name", "Unknown"),
                     "details": PurchaseDetailsSerializer(purchase_details, many=True).data,
                 }
-                # print(f"{self.item_url}/item/{aggregated_data['details'][j]['item']}")
-                # item_response=requests.get(f"{self.item_url}/item/{aggregated_data['details'][j]['item']}")
-                # item_data = item_response.json() if item_response.status_code == 200 else {}
-                # aggregated_data['details'][j]['item']=item_data.get("item_name", "Unknown")
-                # print(aggregated_data['details'][0]['item'])
                 purchase_data.append(aggregated_data)
-                j=j+1
         else:
             purchase = Purchase_master.objects.filter(pk=pk).first()
+            supplier_data = self.get_supplier_data(purchase.supplier_id)
             purchase_details = Purchase_details.objects.filter(fkey=purchase.id)
+            purchase_data = [{
+                "id": purchase.id,
+                "invoice_no": purchase.invoice_no,
+                "invoice_date": purchase.invoice_date,
+                "purchase_id": f"{purchase.id}-{purchase.invoice_date}",
+                "supplier": supplier_data.get("name", "Unknown"),
+                "details": PurchaseDetailsSerializer(purchase_details, many=True).data,
+            }]
 
-            supplier_response = requests.get(f"{self.supplier_url}/supplier/{purchase.supplier_id}")
-            supplier_data = supplier_response.json() if supplier_response.status_code == 200 else {}
-            print("supplier_data",supplier_data)
-            purchase_data=[{
-                    "id": purchase.id,
-                    "invoice_no": purchase.invoice_no,
-                    "invoice_date": purchase.invoice_date,
-                    "purchase_id": f"{purchase.id}-{purchase.invoice_date}",
-                    "supplier": supplier_data.get("name", "Unknown"),
-                    "details": PurchaseDetailsSerializer(purchase_details, many=True).data,
-                }]
         return Response(purchase_data, status=status.HTTP_200_OK)
 
     def post(self, request):
@@ -83,3 +83,17 @@ class Purchase(APIView):
 
         return Response({"message": "Purchase data saved successfully!"}, status=status.HTTP_201_CREATED)
 
+
+
+def get_supplier_service_token():
+    base_url ="http://127.0.0.1" if IS_LOCAL else "http://192.168.1.5" 
+    # Replace with actual credentials
+    response = requests.post(
+        f"{base_url}:8002/api/token/",
+        data={"username": "rupesh", "password": "1234"}
+    )
+    # print("RRRRRRRRRRR",response.json())
+    if response.status_code == 200:
+        return response.json().get("access")
+    else:
+        raise Exception("Failed to obtain token for supplier service")
