@@ -10,7 +10,7 @@ import requests
 
 
 class Purchase(APIView):
-    base_url = "http://127.0.0.1"
+    base_url = "http://192.168.1.5"
     item_url = f'{base_url}:8001'
     supplier_url = f'{base_url}:8002'
 
