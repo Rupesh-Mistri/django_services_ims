@@ -22,7 +22,7 @@ const ItemList = () => {
     // }
     const getItems = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:8001/item');
+            const response = await axios.get('http://192.168.1.5:8001/item');
             setItems(response.data);
         } catch (error) {
             console.error('Error fetching items:', error);
